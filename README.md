@@ -48,7 +48,7 @@ Building a localized OS on a Raspberry Pi 5 presented significant engineering hu
 
 ---
 
-## RNext Steps
+## Next Steps
 *   **Physical Fabrication:** 3D print the case using Matte PLA (Bambu Lab A1).
 *   **Touch:** Integrate TTP223 capacitive touch sensors via GPIO pins to trigger the AI logic loop via physical interactions ("head boops").
 *   **Agentic Framework Integration ("OpenClaw"):** Upgrade BMO from a reactive conversationalist to a ReAct logic agent, granting autonomous capabilities to check internal battery levels, manage files, and write/execute self-contained Pygame scripts on his display.
