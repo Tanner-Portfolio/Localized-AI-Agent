@@ -1,11 +1,11 @@
-# Project BMO: Autonomous Edge AI
+# Localized-AI-Agent
 
-## 📝 Project Overview
+## Overview
 **Project BMO** is an autonomous, 100% offline, locally-hosted entity based on the character BMO from *Adventure Time*. 
 
 This project goes beyond API wrappers/cloud-based LLMs to create a true iteration of BMO. It features a custom-trained Llama-3 personality, a natively cloned neural TTS voice, local vision, and an agentic logic loop running entirely on a **Raspberry Pi 5**.
 
-## 🏗️ Technical Architecture
+## Architecture
 *   **Compute:** Raspberry Pi 5 (8GB RAM), Debian Trixie (Kernel 6.12).
 *   **Brain (LLM):** Llama-3-8B-Instruct (Fine-tuned via Unsloth/QLoRA), deployed via Ollama (.gguf Q4_K_M).
 *   **Voice (TTS):** Piper TTS ONNX model (Approx. 1300-epochs). 
@@ -15,25 +15,25 @@ This project goes beyond API wrappers/cloud-based LLMs to create a true iteratio
 
 ---
 
-## 🧠 1. The Mind: Personality Extraction & Fine-Tuning
+## Fine-Tuning
 Instead of relying on generic system prompts typical for AI agents, BMO's model weights were fine-tuned using the show's canonical dialogue.
 *   **Data Scraping:** Developed a custom Python scraper (BeautifulSoup/MediaWiki API) to extract 845 lines of BMO dialogue from the *Adventure Time* Fandom Wiki, preserving conversational context.
 *   **Model Fine-Tuning:** Formatted data into ChatML and utilized Unsloth (RTX 4080 SUPER, 16GB VRAM) to execute a 300-epoch QLoRA fine-tune. This baked BMO's specific syntax ("Yay!", "Boop!") directly into the Llama-3 model.
 
-## 🗣️ 2. The Voice: Audio Isolation & Neural TTS Training
+## Voice: Audio Isolation & TTS Training
 BMO's voice is a custom-trained neural vocoder based entirely on Niki Yang’s original performance.
 *   **Vocal Isolation:** Extracted MKV episodes to WAV, utilizing **UVR5 (Ultimate Vocal Remover)** and the MDX-Net model to surgically strip background jazz, ambient noise, and sound effects.
 *   **Forced Alignment:** Leveraged **WhisperX** with a custom fuzzy-matching script to compare the scraped text lines against clean audio tracks, automatically generating 306 perfect, timestamped audio snippets.
 *   **Voice Training:** Compiled the `monotonic_align` C++ engine from source and trained a custom `.onnx` voice model via Piper TTS for 1300 epochs.
 
-## 👂 3. The Senses: Local STT, Wake Word, & Vision
+## Senses
 *   **Hardware Resampling Bridge:** The USB microphone records natively at 48kHz, but the wake-word engine requires 16kHz. Engineered a custom Python `sounddevice` bridge utilizing NumPy decimation (`pcm[::3]`) to downsample audio in real-time, preventing `ALSA Invalid Sample Rate` crashes.
 *   **Wake Word & STT:** Utilizes a custom `.tflite` model for 100% offline "Hey BMO" triggering, handing off to `faster-whisper` (CPU-bound) for sub-second transcription.
 *   **Computer Vision:** Triggered by keywords ("look" or "see"), `rpicam-still` silently captures the environment, passing the frame to the Moondream (1.6GB) Vision-Language Model to generate in-character descriptions of the physical world.
 
 ---
 
-## 🛠️ Overcoming Hardware & Architectural Failures
+## Challenges
 Building a localized OS on a Raspberry Pi 5 presented significant engineering hurdles:
 
 1.  **The ReSpeaker 2-Mics HAT I2C Failure:**
@@ -48,7 +48,7 @@ Building a localized OS on a Raspberry Pi 5 presented significant engineering hu
 
 ---
 
-## 🚀 Roadmap & Next Steps
-*   **Physical Fabrication:** 3D print the "Heart of Gold" internal chassis and teal outer shell using Matte PLA (Bambu Lab A1).
-*   **Capacitive Touch:** Integrate TTP223 capacitive touch sensors via GPIO pins to trigger the AI logic loop via physical interactions ("head boops").
+## RNext Steps
+*   **Physical Fabrication:** 3D print the case using Matte PLA (Bambu Lab A1).
+*   **Touch:** Integrate TTP223 capacitive touch sensors via GPIO pins to trigger the AI logic loop via physical interactions ("head boops").
 *   **Agentic Framework Integration ("OpenClaw"):** Upgrade BMO from a reactive conversationalist to a ReAct logic agent, granting autonomous capabilities to check internal battery levels, manage files, and write/execute self-contained Pygame scripts on his display.
